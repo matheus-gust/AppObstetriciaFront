@@ -97,7 +97,7 @@ class Cadastro extends StatelessWidget {
                                               email: _email.text,
                                               senha: _senha.text);
                                       NovoUsuarioDTO usuario = await model
-                                          .cadastro(body: novoUsuario.toMap());
+                                          .cadastro(body: novoUsuario.toMap(), context: context);
                                       _senha.text = "";
                                     }
                                   },

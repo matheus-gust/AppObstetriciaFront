@@ -38,16 +38,20 @@ class UserModel extends Model {
         notifyListeners();
        var mensagem =  jsonDecode(response.body);
 
-        _showToast(context, mensagem['message']);
+        _toastyLogin(context, mensagem['message']);
       }
 
       notifyListeners();
 
       return null;
+    }).catchError((e) {
+      isLoading = false;
+      notifyListeners();
+      _erro(context, "Falha ao conectar ao servidor");
     });
   }
 
-  Future<NovoUsuarioDTO> cadastro({Map body}) {
+  Future<NovoUsuarioDTO> cadastro({Map body, BuildContext context}) {
     isLoading = true;
     notifyListeners();
     return http.post(
@@ -62,13 +66,36 @@ class UserModel extends Model {
       isLoading = false;
       notifyListeners();
 
-      print(response.statusCode);
+      if(response.statusCode == 403) {
+        _toastyCadastro(context, jsonDecode(response.body)["error"], Colors.red);
+      }
+
+      if(response.statusCode == 201) {
+        _toastyCadastro(context, "Usuario criado", Colors.green);
+      }
 
       return null;
-    });
+    }).catchError((e) {
+      isLoading = false;
+      notifyListeners();
+      _erro(context, "Falha ao conectar ao servidor");
+    });;
   }
 
-  void _showToast(BuildContext context, String mensagem) {
+  void _toastyCadastro(BuildContext context, String mensagem, Color color) {
+    final scaffold = Scaffold.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        backgroundColor: color,
+        content: Text(mensagem),
+        action: SnackBarAction(
+            textColor: Colors.black,
+            label: 'Fechar', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
+  }
+
+  void _toastyLogin(BuildContext context, String mensagem) {
     final scaffold = Scaffold.of(context);
     scaffold.showSnackBar(
       SnackBar(
@@ -76,6 +103,19 @@ class UserModel extends Model {
         content: Text(mensagem),
         action: SnackBarAction(
           textColor: Colors.black,
+            label: 'Fechar', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
+  }
+
+  void _erro(BuildContext context, String mensagem) {
+    final scaffold = Scaffold.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(mensagem),
+        action: SnackBarAction(
+            textColor: Colors.black,
             label: 'Fechar', onPressed: scaffold.hideCurrentSnackBar),
       ),
     );
