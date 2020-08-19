@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:obstetricia/UI/slide/slides/dados_sociodemograficos.dart';
 
 class Slide extends StatelessWidget {
 
@@ -10,8 +11,11 @@ class Slide extends StatelessWidget {
       child: PageView(
         controller: _pageController,
         children: <Widget>[
-          Container(color: Colors.black,),
-          Container(color: Colors.grey,)
+          Container(
+              child: DadosSociodemograficos() 
+            ),
+          Container(color: Colors.grey,),
+          Container(color: Colors.white,)
         ],
       ),
     );

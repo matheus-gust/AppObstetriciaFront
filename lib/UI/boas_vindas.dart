@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:obstetricia/UI/components/pagina_inicial/pagina_inicial.dart';
+import 'package:obstetricia/UI/slide/slides/dados_sociodemograficos.dart';
 
 class BoasVindas extends StatefulWidget {
   @override
@@ -84,6 +86,7 @@ class _BoasVindasScreen extends State<BoasVindas>
                   child: Text(
                     _initText,
                     style: TextStyle(
+                        decoration: TextDecoration.none,
                         color: Color.fromARGB(255, 255,255,255),
                         fontSize: 30,
                         fontFamily: 'Bebas Neue'),
@@ -100,36 +103,38 @@ class _BoasVindasScreen extends State<BoasVindas>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text("Deseja concluir seu cadastro?",
+          Padding(padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+            child: Text("Antes de prosseguir vamos precisar de algumas informações!",
               style: TextStyle(
+                  decoration: TextDecoration.none,
                   color: Color.fromARGB(255, 255,255,255),
                   fontSize: 20,
-                  fontFamily: 'Bebas Neue'
-              )
+                  fontFamily: 'Bebas Neue',
+              ),
+              textAlign: TextAlign.center,
+          ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 15),
+            padding: EdgeInsets.only(top: 15, left: 15, right: 15),
             child: AnimatedOpacity(
               opacity: _opcaoOpacidade,
               duration: Duration(milliseconds: 1000),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   RaisedButton(
-                    child: Text("SIM"),
-                    color: Colors.blueGrey,
-                    onPressed: () {
-
-                    },
+                    child: Text("Continuar",
+                          style: TextStyle(fontSize: 20, color: Colors.black)),
+                    color: Colors.white,
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    DadosSociodemograficos()));
+                      }
                   ),
-                  Padding(padding: EdgeInsets.only(left: 10, right: 10)),
-                  RaisedButton(
-                    child: Text("NÃO"),
-                    color: Colors.blueGrey,
-                    onPressed: () {
-
-                    }
-                  )
                 ],
               ),
             ),

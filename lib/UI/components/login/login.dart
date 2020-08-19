@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:obstetricia/UI/boas_vindas.dart';
-import 'package:obstetricia/UI/cadastro.dart';
-import 'package:obstetricia/models/Credenciais.dart';
-import 'package:obstetricia/models/user_model.dart';
+import 'package:obstetricia/UI/components/cadastro/cadastro.dart';
+import 'package:obstetricia/UI/components/login/shared/model/Credenciais.dart';
+import 'package:obstetricia/UI/components/login/shared/service/login_Service.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class Login extends StatelessWidget {
@@ -20,7 +20,7 @@ class Login extends StatelessWidget {
       ),
       body: SingleChildScrollView(
           padding: EdgeInsets.only(top: 100.0),
-          child: ScopedModelDescendant<UserModel>(
+          child: ScopedModelDescendant<LoginService>(
               builder: (context, child, model) {
             if (model.isLoading) {
               return Center(child: CircularProgressIndicator());
@@ -52,7 +52,7 @@ class Login extends StatelessWidget {
                           },
                           keyboardType: TextInputType.emailAddress,
                         ),
-                        TextFormField(
+                        TextFormField( 
                           decoration: InputDecoration(
                             labelText: 'Senha',
                             labelStyle: TextStyle(
@@ -86,7 +86,7 @@ class Login extends StatelessWidget {
                               child: RaisedButton(
                                   color: Color.fromARGB(255, 255, 70, 70),
                                   onPressed: () async {
-                                    if (_formKey.currentState.validate()) {
+                                    /*if (_formKey.currentState.validate()) {
                                       Credenciais usuario = new Credenciais(
                                           email: _email.text,
                                           senha: _senha.text);
@@ -100,78 +100,21 @@ class Login extends StatelessWidget {
                                                     BoasVindas()));
                                       }
                                     }
-                                    _senha.text = "";
+                                    _senha.text = "";*/
+
+                                    Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BoasVindas()));
                                   },
                                   child: Text("Acessar",
                                       style: TextStyle(
                                           fontSize: 20, color: Colors.white))),
                             )),
                         Padding(
-                          padding: EdgeInsets.only(top: 40.0, bottom: 40.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.all(5.0),
-                                child: Ink(
-                                    decoration: const ShapeDecoration(
-                                      color: Colors.transparent,
-                                      shape: CircleBorder(
-                                          side: BorderSide(
-                                              color: Color.fromARGB(
-                                                  255, 255, 70, 70))),
-                                    ),
-                                    child: Padding(
-                                        padding: EdgeInsets.all(5.0),
-                                        child: IconButton(
-                                          icon: Icon(Icons.android),
-                                          color:
-                                              Color.fromARGB(255, 255, 70, 70),
-                                          onPressed: () {},
-                                        ))),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(5.0),
-                                child: Ink(
-                                    decoration: const ShapeDecoration(
-                                      color: Colors.transparent,
-                                      shape: CircleBorder(
-                                          side: BorderSide(
-                                              color: Color.fromARGB(
-                                                  255, 255, 70, 70))),
-                                    ),
-                                    child: Padding(
-                                        padding: EdgeInsets.all(5.0),
-                                        child: IconButton(
-                                          icon: Icon(Icons.android),
-                                          color:
-                                              Color.fromARGB(255, 255, 70, 70),
-                                          onPressed: () {},
-                                        ))),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(5.0),
-                                child: Ink(
-                                    decoration: const ShapeDecoration(
-                                      color: Colors.transparent,
-                                      shape: CircleBorder(
-                                          side: BorderSide(
-                                              color: Color.fromARGB(
-                                                  255, 255, 70, 70))),
-                                    ),
-                                    child: Padding(
-                                        padding: EdgeInsets.all(5.0),
-                                        child: IconButton(
-                                          icon: Icon(Icons.android),
-                                          color:
-                                              Color.fromARGB(255, 255, 70, 70),
-                                          onPressed: () {},
-                                        ))),
-                              ),
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
+                          padding: EdgeInsets.only(top: 30.0),
+                          child: GestureDetector(
                             onTap: () {
                               Navigator.push(
                                   context,
@@ -182,7 +125,7 @@ class Login extends StatelessWidget {
                                 style: TextStyle(
                                     color: Color.fromARGB(255, 255, 70, 70),
                                     fontSize: 18.0),
-                                textAlign: TextAlign.center)),
+                                textAlign: TextAlign.center)))
                       ],
                     ),
                   )
