@@ -13,6 +13,7 @@ class TelaInicial extends StatefulWidget {
 }
 
 class _TelaInicialState extends State<TelaInicial> {
+
   @override
   void initState() {
     super.initState();
@@ -193,8 +194,10 @@ class _TelaInicialState extends State<TelaInicial> {
                       ),
                     ),
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Amamentacao()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Amamentacao()));
                     },
                   ),
                 )

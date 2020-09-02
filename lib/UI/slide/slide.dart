@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:obstetricia/UI/slide/slides/dados_sociodemograficos.dart';
+import 'package:obstetricia/UI/slide/sociodemograficos/dados_sociodemograficos.dart';
 
 class Slide extends StatelessWidget {
 

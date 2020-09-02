@@ -7,8 +7,7 @@ class Credenciais {
 
   factory Credenciais.fromJson(Map<String, dynamic> json) {
     return Credenciais(
-      email: json['email'],
-      id: json['nome']
+      email: json['email']
     );
   }
 

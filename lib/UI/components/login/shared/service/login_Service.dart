@@ -4,23 +4,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:obstetricia/UI/components/cadastro/shared/model/NovoUsuarioDTO.dart';
 import 'package:obstetricia/UI/components/login/shared/model/Credenciais.dart';
+import 'package:obstetricia/shared/servidor.service.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class LoginService extends Model {
-  static final BASE_URL = "http://192.168.0.108:9000";
-  static final LOGIN_URL = BASE_URL + "/login";
-  static final CADASTRO_URL = BASE_URL + "/usuario/cadastro";
+  static final BASE_URL = ServidorService.BASE_URL;
+  static final LOGIN_URL = BASE_URL + "login";
+  static final CADASTRO_URL = BASE_URL + "usuario/cadastro";
   static final _API_KEY = "somerandomkey";
 
   bool isLoading = false;
   bool logado = false;
 
   Future<Credenciais> login({Map body, BuildContext context}) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
     isLoading = true;
     notifyListeners();
-    return http.post(
+    try {
+      return http.post(
       LOGIN_URL,
       body: jsonEncode(body),
       headers: {
@@ -29,6 +35,7 @@ class LoginService extends Model {
     ).then((http.Response response) {
       isLoading = false;
       if (response.headers["authorization"] != null) {
+        preferences.setString('token', response.headers["authorization"]);
         logado = true;
       }
 
@@ -50,6 +57,10 @@ class LoginService extends Model {
       notifyListeners();
       _erro(context, "Falha ao conectar ao servidor");
     });
+    } catch(e) {
+      _toastyLogin(context, 'Falha ao conectar com o servidor');
+    }
+    
   }
 
   void _toastyCadastro(BuildContext context, String mensagem, Color color) {
@@ -112,6 +123,10 @@ class LoginService extends Model {
 
       if(response.statusCode == 201) {
         _toastyCadastro(context, "Usuario criado", Colors.green);
+      }
+
+      if(response.statusCode != 201 && response.statusCode != 403) {
+        _toastyCadastro(context, "Falha ao cadastrar usuario", Colors.red);
       }
 
       return null;

@@ -79,7 +79,6 @@ class Cadastro extends StatelessWidget {
                                     if (_formKey.currentState.validate()) {
                                       NovoUsuarioDTO novoUsuario =
                                           NovoUsuarioDTO(
-                                              nome: _nome.text,
                                               email: _email.text,
                                               senha: _senha.text);
                                       NovoUsuarioDTO usuario =

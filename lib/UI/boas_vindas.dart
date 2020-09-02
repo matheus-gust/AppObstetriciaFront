@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:obstetricia/UI/components/pagina_inicial/pagina_inicial.dart';
-import 'package:obstetricia/UI/slide/slides/dados_sociodemograficos.dart';
+import 'package:obstetricia/UI/boas_vindas.service.dart';
+import 'package:obstetricia/UI/slide/sociodemograficos/dados_sociodemograficos.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class BoasVindas extends StatefulWidget {
   @override
@@ -42,25 +43,25 @@ class _BoasVindasScreen extends State<BoasVindas>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color.fromARGB(255, 255,70,70),
-            Color.fromARGB(255, 200,200,200)
-          ],
-
-        )
-      ),
-        child: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            continuar(context),
-            boasVindas(context),
-          ],
-        )
+    return ScopedModel<BoasVindasService>(
+      model: BoasVindasService(),
+      child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromARGB(255, 255, 70, 70),
+              Color.fromARGB(255, 200, 200, 200)
+            ],
+          )),
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              continuar(context),
+              boasVindas(context),
+            ],
+          )),
     );
   }
 
@@ -76,8 +77,11 @@ class _BoasVindasScreen extends State<BoasVindas>
                 duration: Duration(milliseconds: 250),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(40.0),
-                    color: _aberto ? Colors.transparent : Color.fromARGB(255, 255,255,255),
-                    border: Border.all(width: 3, color: Color.fromARGB(255, 255,255,255))),
+                    color: _aberto
+                        ? Colors.transparent
+                        : Color.fromARGB(255, 255, 255, 255),
+                    border: Border.all(
+                        width: 3, color: Color.fromARGB(255, 255, 255, 255))),
                 height: 75,
                 width: _width,
                 child: AnimatedOpacity(
@@ -87,7 +91,7 @@ class _BoasVindasScreen extends State<BoasVindas>
                     _initText,
                     style: TextStyle(
                         decoration: TextDecoration.none,
-                        color: Color.fromARGB(255, 255,255,255),
+                        color: Color.fromARGB(255, 255, 255, 255),
                         fontSize: 30,
                         fontFamily: 'Bebas Neue'),
                   ),
@@ -100,46 +104,63 @@ class _BoasVindasScreen extends State<BoasVindas>
     return AnimatedOpacity(
       opacity: _continuarOpacidade,
       duration: Duration(milliseconds: 500),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Padding(padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            child: Text("Antes de prosseguir vamos precisar de algumas informações!",
-              style: TextStyle(
-                  decoration: TextDecoration.none,
-                  color: Color.fromARGB(255, 255,255,255),
-                  fontSize: 20,
-                  fontFamily: 'Bebas Neue',
-              ),
-              textAlign: TextAlign.center,
-          ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 15, left: 15, right: 15),
-            child: AnimatedOpacity(
-              opacity: _opcaoOpacidade,
-              duration: Duration(milliseconds: 1000),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  RaisedButton(
-                    child: Text("Continuar",
-                          style: TextStyle(fontSize: 20, color: Colors.black)),
-                    color: Colors.white,
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    DadosSociodemograficos()));
-                      }
+      child: ScopedModelDescendant<BoasVindasService>(
+        builder: (context, child, model) {
+          model.verificarRegistros();
+          if (model.carregando == true) {
+            return Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CircularProgressIndicator(),
+                Text("Carregando!")
+              ],
+            ));
+          }
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                child: Text(
+                  "Antes de prosseguir vamos precisar de algumas informações!",
+                  style: TextStyle(
+                    decoration: TextDecoration.none,
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    fontSize: 20,
+                    fontFamily: 'Bebas Neue',
                   ),
-                ],
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-          )
-        ],
+              Padding(
+                padding: EdgeInsets.only(top: 15, left: 15, right: 15),
+                child: AnimatedOpacity(
+                  opacity: _opcaoOpacidade,
+                  duration: Duration(milliseconds: 1000),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RaisedButton(
+                          child: Text("Continuar",
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.black)),
+                          color: Colors.white,
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        DadosSociodemograficos()));
+                          }),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          );
+        },
       ),
     );
   }
