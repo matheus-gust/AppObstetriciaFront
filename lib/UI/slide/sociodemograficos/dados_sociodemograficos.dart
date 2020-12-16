@@ -24,6 +24,7 @@ class _DadosSociodemograficosState extends State<DadosSociodemograficos> {
       new DadosSociodemograficosService();
 
   TextEditingController dateCtrl = TextEditingController();
+  
 
   List<DadosSelect> _listaEscolaridade = [
     new DadosSelect(id: 0, label: 'Medio'),
@@ -55,6 +56,8 @@ class _DadosSociodemograficosState extends State<DadosSociodemograficos> {
 
   @override
   Widget build(BuildContext context) {
+    double statusBarPadding = MediaQuery.of(context).padding.top;
+
     return ScopedModel<DadosSociodemograficosService>(
         model: DadosSociodemograficosService(),
         child: Scaffold(
@@ -88,7 +91,7 @@ class _DadosSociodemograficosState extends State<DadosSociodemograficos> {
                 ),
                 SingleChildScrollView(
                     child: Padding(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: EdgeInsets.only(top: statusBarPadding, left: 10, right: 10, bottom: 10 ),
                         child: Container(
                             padding: EdgeInsets.only(bottom: 50),
                             color: Colors.white,

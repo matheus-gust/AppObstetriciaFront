@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:obstetricia/UI/boas_vindas.service.dart';
+import 'package:obstetricia/UI/components/pagina_inicial/pagina_inicial.dart';
 import 'package:obstetricia/UI/slide/sociodemograficos/dados_sociodemograficos.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -11,6 +13,8 @@ class BoasVindas extends StatefulWidget {
 
 class _BoasVindasScreen extends State<BoasVindas>
     with SingleTickerProviderStateMixin {
+  BoasVindasService boasVindasService;
+
   AnimationController controller;
   Animation<double> animation;
 
@@ -29,6 +33,7 @@ class _BoasVindasScreen extends State<BoasVindas>
   @override
   void initState() {
     super.initState();
+    boasVindasService = BoasVindasService();
 
     controller = AnimationController(
       vsync: this,
@@ -38,31 +43,30 @@ class _BoasVindasScreen extends State<BoasVindas>
     animation = Tween(begin: 0.0, end: 3.0).animate(controller);
     controller.forward();
 
-    setBemVindoAnimatin();
+    setBemVindoAnimatin().then((value) {
+      boasVindasService.verificarRegistroFinalizado();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModel<BoasVindasService>(
-      model: BoasVindasService(),
-      child: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color.fromARGB(255, 255, 70, 70),
-              Color.fromARGB(255, 200, 200, 200)
-            ],
-          )),
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              continuar(context),
-              boasVindas(context),
-            ],
-          )),
-    );
+    return Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color.fromARGB(255, 255, 70, 70),
+            Color.fromARGB(255, 200, 200, 200)
+          ],
+        )),
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            continuar(context),
+            boasVindas(context),
+          ],
+        ));
   }
 
   Widget boasVindas(BuildContext context) {
@@ -102,70 +106,121 @@ class _BoasVindasScreen extends State<BoasVindas>
 
   Widget continuar(BuildContext context) {
     return AnimatedOpacity(
-      opacity: _continuarOpacidade,
-      duration: Duration(milliseconds: 500),
-      child: ScopedModelDescendant<BoasVindasService>(
-        builder: (context, child, model) {
-          model.verificarRegistros();
-          if (model.carregando == true) {
+        opacity: _continuarOpacidade,
+        duration: Duration(milliseconds: 500),
+        child: Observer(builder: (BuildContext context) {
+          if (boasVindasService.boasVindasModel == null) {
             return Center(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 CircularProgressIndicator(),
-                Text("Carregando!")
+                SizedBox(
+                  height: 15,
+                ),
+                Text("Carregando!",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                      decoration: TextDecoration.none,
+                    ))
               ],
             ));
+          } else if (boasVindasService.boasVindasModel.cadastroFinalizado ==
+              false) {
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: Text(
+                    "Antes de prosseguir vamos precisar de algumas informações!",
+                    style: TextStyle(
+                      decoration: TextDecoration.none,
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      fontSize: 20,
+                      fontFamily: 'Bebas Neue',
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 15, left: 15, right: 15),
+                  child: AnimatedOpacity(
+                    opacity: _opcaoOpacidade,
+                    duration: Duration(milliseconds: 1000),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        RaisedButton(
+                            child: Text("Continuar",
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.black)),
+                            color: Colors.white,
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          DadosSociodemograficos()));
+                            }),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            );
+          } else {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: Text(
+                    "Tudo Pronto!",
+                    style: TextStyle(
+                      decoration: TextDecoration.none,
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      fontSize: 20,
+                      fontFamily: 'Bebas Neue',
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 15, left: 15, right: 15),
+                  child: AnimatedOpacity(
+                    opacity: _opcaoOpacidade,
+                    duration: Duration(milliseconds: 1000),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        RaisedButton(
+                            child: Text("Continuar",
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.black)),
+                            color: Colors.white,
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          PaginaInicial()));
+                            }),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            );
           }
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-                child: Text(
-                  "Antes de prosseguir vamos precisar de algumas informações!",
-                  style: TextStyle(
-                    decoration: TextDecoration.none,
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    fontSize: 20,
-                    fontFamily: 'Bebas Neue',
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 15, left: 15, right: 15),
-                child: AnimatedOpacity(
-                  opacity: _opcaoOpacidade,
-                  duration: Duration(milliseconds: 1000),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      RaisedButton(
-                          child: Text("Continuar",
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.black)),
-                          color: Colors.white,
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        DadosSociodemograficos()));
-                          }),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          );
-        },
-      ),
-    );
+          return Center();
+        }));
   }
 
-  void setBemVindoAnimatin() async {
+  Future<void> setBemVindoAnimatin() async {
     await Future.delayed(Duration(seconds: 1));
     setState(() {
       _opacidadeBoasVindas = 1.0;
@@ -198,6 +253,8 @@ class _BoasVindasScreen extends State<BoasVindas>
     await Future.delayed(Duration(seconds: 1));
 
     setContinuar();
+
+    return;
   }
 
   setContinuar() {
@@ -207,3 +264,6 @@ class _BoasVindasScreen extends State<BoasVindas>
     });
   }
 }
+
+/*
+          return */

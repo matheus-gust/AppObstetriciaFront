@@ -15,8 +15,7 @@ class PaginaInicial extends StatelessWidget {
         Scaffold(
           body: TelaInicial(),
           drawer: Sidebar(),
-    )
-      ],
+    )],
     );
   }
 }

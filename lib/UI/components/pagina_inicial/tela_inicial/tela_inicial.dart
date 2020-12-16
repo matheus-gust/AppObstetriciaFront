@@ -3,6 +3,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:obstetricia/UI/components/amamentacao/amamentacao.dart';
 import 'package:obstetricia/UI/components/anticoncepcao/anticoncepcao.dart';
 import 'package:obstetricia/UI/components/cuidados/cuidados.dart';
+import 'package:obstetricia/UI/components/pagina_inicial/controle_de_gestacao.dart/controle_de_gestacao.dart';
 import 'package:obstetricia/UI/components/parto/parto.dart';
 import 'package:obstetricia/UI/components/pre_natal/pre_natal.dart';
 import 'package:obstetricia/UI/components/vacinacao/vacinacao.dart';
@@ -13,7 +14,6 @@ class TelaInicial extends StatefulWidget {
 }
 
 class _TelaInicialState extends State<TelaInicial> {
-
   @override
   void initState() {
     super.initState();
@@ -37,6 +37,19 @@ class _TelaInicialState extends State<TelaInicial> {
         CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
+              actions: <Widget>[
+                Padding(
+                    padding: EdgeInsets.only(right: 8),
+                    child: IconButton(
+                      icon: Icon(Icons.person_outline),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ControleGestacao()));
+                      },
+                    ))
+              ],
               floating: true,
               snap: true,
               backgroundColor: Colors.transparent,

@@ -96,7 +96,7 @@ class Login extends StatelessWidget {
                                             body: usuario.toMap(),
                                             context: context);
                                         if (model.logado == true) {
-                                          Navigator.push(
+                                          Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
@@ -123,7 +123,7 @@ class Login extends StatelessWidget {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => Cadastro()));
+                                      builder: (context) => Cadastro()));
                                   },
                                   child: Text("Fazer cadastro",
                                       style: TextStyle(

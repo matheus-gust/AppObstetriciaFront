@@ -28,10 +28,11 @@ class DadosSociodemograficosService extends Model {
     return http.post(
       BASE_URL + "usuario/cadastro-sociodemograficos",
       body: jsonEncode(dados),
-      headers: {
-        'Authorization': preferences.get('token'),
-        'Content-Type': 'application/json'
-      },
+       headers: {
+          'Content-Type': 'application/json',
+          'Authorization':
+              'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXRAaG90bWFpbC5jb20iLCJleHAiOjE2MzE3NDA4ODB9.BZgjdsocB4-2p0F3iboYTBJNPv7T0c-KyCbvqn2-wM81nTqdMCJtVIIj_9KxmBOpu5Z09xt1AVLbO26XYA0mWQ' //preferences.getString('token')
+        },
     ).then((http.Response response) {
       carregando = false;
       notifyListeners();
